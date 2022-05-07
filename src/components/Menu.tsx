@@ -10,53 +10,43 @@ type Props = {};
 
 const Menu = (props: Props) => {
   const navigate = useNavigate();
-  const unauthorizedItems = [
-    {
-      label: "Home",
-      icon: PrimeIcons.HOME,
-      command: () => {
-        navigate("/");
-      },
-    },
-    {
-      label: "Sign in",
-      icon: PrimeIcons.SIGN_IN,
-      command: () => {
-        navigate("/signin");
-      },
-    },
-    // {
-    //   label: "Sign up",
-    //   icon: "pi pi-fw pi-sign-in",
-    //   command: () => {navigate('/signup') }
-    // },
-  ];
 
-  const authorizedItems = [
+  const items = [
     {
       label: "Dashboard",
-      icon: "pi pi-fw pi-sign-in",
+      icon: PrimeIcons.HOME,
+      command: () => {
+        navigate("/dashboard");
+      },
     },
     {
       label: "Time entry",
-      icon: "pi pi-fw pi-calendar-plus",
+      icon: PrimeIcons.CALENDAR_PLUS,
+      command: () => {
+        navigate("/entry");
+      },
     },
     {
       label: "Account",
-      icon: "pi pi-fw pi-user",
+      icon: PrimeIcons.USER,
       items: [
         {
           label: "Settings",
-          icon: "pi pi-fw pi-user-edit",
+          icon: PrimeIcons.USER_EDIT,
+          command: () => {
+            navigate("/settings");
+          },
         },
         {
-          label: "Sign out",
-          icon: "pi pi-fw pi-sign-out",
+          label: "Info",
+          icon: PrimeIcons.INFO_CIRCLE,
+          command: () => {
+            navigate("/info");
+          },
         },
       ],
     },
   ];
-  const items = { unauthorizedItems, authorizedItems };
   let logout = (
     <div>
       <Button label="Exit" icon={PrimeIcons.SIGN_OUT} />
@@ -65,12 +55,10 @@ const Menu = (props: Props) => {
 
   const { auth } = React.useContext(authContext);
 
-  const authorizedMenu = <Menubar model={items.authorizedItems} end={logout} />;
-  const unauthorizedMenu = <Menubar model={items.unauthorizedItems} />;
-
+  const authorizedMenu = <Menubar model={items} end={logout} />;
   return (
     <div className="my-menu">
-      {auth.cookie ? authorizedMenu : unauthorizedMenu}
+      {auth.cookie ? authorizedMenu : null}
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { Button } from "primereact/button";
 import { Link } from "react-router-dom";
 type Props = {};
 
-const Home = (props: Props) => {
+const Dashboard = (props: Props) => {
   const [count, setCount] = useState(0);
   return (
     <div className="flex flex-column align-items-center justify-content-center">
@@ -24,4 +24,4 @@ const Home = (props: Props) => {
   );
 };
 
-export default Home;
+export default Dashboard;

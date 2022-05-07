@@ -1,3 +1,3 @@
 import { UserAuth } from "../types";
 
-export const DEFAULT_USER_AUTH: UserAuth = { id: 0, email: "", cookie: "test" };
+export const DEFAULT_USER_AUTH: UserAuth = { id: 0, email: "", cookie: "fe" };
