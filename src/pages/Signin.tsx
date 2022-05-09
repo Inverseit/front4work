@@ -44,6 +44,7 @@ export default function Signin(props: ISignupProps) {
       await setAuthStatus({
         id: res.data.id,
         username: username,
+        cookie: res.data.cookie,
       });
       await setLoading(false);
       navigate("/dashboard");

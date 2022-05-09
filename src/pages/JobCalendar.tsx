@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Calendar } from "primereact/calendar";
-type Props = { jobID: number };
+type Props = { jobID: string };
 
 const JobCalendar = (props: Props) => {
   const [date, setDate] = useState<Date | Date[] | undefined>(undefined);
