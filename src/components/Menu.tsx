@@ -10,6 +10,7 @@ type Props = {};
 
 const Menu = (props: Props) => {
   const navigate = useNavigate();
+  const { auth, setUnauthStatus } = React.useContext(authContext);
 
   const items = [
     {
@@ -49,18 +50,16 @@ const Menu = (props: Props) => {
   ];
   let logout = (
     <div>
-      <Button label="Exit" icon={PrimeIcons.SIGN_OUT} />
+      <Button
+        label="Exit"
+        icon={PrimeIcons.SIGN_OUT}
+        onClick={setUnauthStatus}
+      />
     </div>
   );
-
-  const { auth } = React.useContext(authContext);
 
   const authorizedMenu = <Menubar model={items} end={logout} />;
-  return (
-    <div className="my-menu">
-      {auth.cookie ? authorizedMenu : null}
-    </div>
-  );
+  return <div className="my-menu">{auth.id ? authorizedMenu : null}</div>;
 };
 
 export default Menu;
