@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Password } from "primereact/password";
 import { Checkbox } from "primereact/checkbox";
-import client from "../utils/axios";
+import client, { isAxiosError } from "../utils/axios";
 import { Messages } from "primereact/messages";
 import { authContext } from "../contexts/AuthContext";
 
@@ -20,7 +20,7 @@ export default function Signin(props: ISignupProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const msgs: any = useRef(null);
 
-  const showError = (message:string) => {
+  const showError = (message: string) => {
     msgs.current.show([
       {
         severity: "error",
@@ -41,16 +41,26 @@ export default function Signin(props: ISignupProps) {
         { headers: { "Content-Type": "application/json" } }
       );
       console.log(res);
-      await setAuthStatus({
+      setAuthStatus({
         id: res.data.id,
         username: username,
         cookie: res.data.cookie,
       });
-      await setLoading(false);
+      setLoading(false);
       navigate("/dashboard");
-    } catch (error) {
-      await setLoading(false);
-      showError("! Wrong credentials! Try again");
+    } catch (error: any) {
+      setLoading(false);
+      console.log(error);
+      if (isAxiosError(error)) {
+        if (error?.response?.status === 400) {
+          showError("! Wrong credentials! Try again");
+        }
+        if (error?.code === "ERR_NETWORK") {
+          showError("! Network error! Try again");
+        }
+      } else {
+        showError("! Server error, we are investigating.");
+      }
     }
   };
 

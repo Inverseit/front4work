@@ -6,11 +6,11 @@ import { DEFAULT_USER_AUTH } from "./constants";
 const useAuthHandler = (initialState: UserAuth) => {
   const [auth, setAuth] = React.useState(initialState);
   const setAuthStatus = (userAuth: UserAuth) => {
-    window.localStorage.setItem("UserAuth", JSON.stringify(userAuth));
+    window.sessionStorage.setItem("UserAuth", JSON.stringify(userAuth));
     setAuth(userAuth);
   };
   const setUnauthStatus = () => {
-    window.localStorage.clear();
+    window.sessionStorage.clear();
     setAuth(DEFAULT_USER_AUTH);
   };
   return {

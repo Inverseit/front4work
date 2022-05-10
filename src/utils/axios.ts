@@ -7,4 +7,6 @@ const config: AxiosRequestConfig = {
 
 const client: AxiosInstance = axios.create(config);
 
+export const isAxiosError = axios.isAxiosError;
+
 export default client;
