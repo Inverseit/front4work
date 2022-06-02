@@ -36,6 +36,7 @@ const TimeEntry = () => {
             "x-cookie-token": auth.cookie,
           },
         });
+        console.log(res);
         setJobs(res.data.jobs);
         setLoading(false);
       } catch (error) {
