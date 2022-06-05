@@ -1,18 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { setupCache } from 'axios-cache-adapter';
-
-// Create `axios-cache-adapter` instance
-const cache = setupCache({
-  maxAge: 15 * 60 * 1000,
-  exclude: {
-    query: false
-  }
-})
 
 const config: AxiosRequestConfig = {
   // baseURL: process.env.API_SERVER_URL,
-  baseURL: "http://localhost:3011/",
-  adapter: cache.adapter
+  baseURL: "http://localhost:3011/"
 };
 
 const client: AxiosInstance = axios.create(config);
