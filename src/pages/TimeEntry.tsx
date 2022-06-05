@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "primereact/button";
+import { Toast } from 'primereact/toast';
 import JobCalendar from "./JobCalendar";
 import { authContext } from "../contexts/AuthContext";
 import client from "../utils/axios";
@@ -49,29 +50,33 @@ const TimeEntry = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const toast = useRef(null);
+
   if (loading) {
     return <ProgressSpinner />;
   }
 
   return (
+    <>
+    <Toast ref={toast} />
     <div className="card flex flex-column justify-content-center align-items-center">
-      <h2>Job list</h2>
       <div className="pt-2 pb-4">
         {jobs.map((job: Job) => (
           <Button
             key={job.jobID}
             onClick={() => setActiveJobID(job.jobID)}
             className={activeJobID !== job.jobID ? "p-button-text mr-2" : ""}
-            label={job.title}
+            label={job.ref + " " + job.title}
           />
         ))}
       </div>
       {activeJobID !== NOT_CHOOSEN_JOB ? (
-        <JobCalendar jobID={activeJobID} />
+        <JobCalendar jobID={activeJobID} toast={toast}/>
       ) : (
         <p>Choose a job</p>
       )}
     </div>
+    </>
   );
 };
 

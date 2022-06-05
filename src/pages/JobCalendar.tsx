@@ -4,17 +4,27 @@ import client from "../utils/axios";
 import { authContext } from "../contexts/AuthContext";
 import { ProgressSpinner } from "primereact/progressspinner";
 import EntryCard from "./EntryCard";
-import { JobTimeEntry, JobHash} from "../types"
+import dayjs from "dayjs";
+import { objectMap } from "../utils/helpers";
+import { JobTimeEntry, JobHash } from "../types";
 
-type Props = { jobID: string };
+interface CardJobEntry extends JobTimeEntry {
+  dayjsObject: dayjs.Dayjs;
+}
+export interface CardJobEntryHash {
+  [key: string]: CardJobEntry;
+}
 
+type Props = { jobID: string; toast: React.MutableRefObject<null> };
 
 const JobCalendar = (props: Props) => {
   const [date, setDate] = useState<Date | Date[] | undefined>(undefined);
   const [choosenDate, setChoosenDate] = useState<Date | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
-  const [workEntries, setWorkEntries] = useState<JobHash>({});
+  const [edit, setEdit] = useState(false);
   const { auth } = React.useContext(authContext);
+
+  const [extendedEntries, setExtendedEntries] = useState<CardJobEntryHash>({});
 
   const preProcessEntries = (entries: JobTimeEntry[]): JobHash => {
     const res: JobHash = {};
@@ -37,7 +47,14 @@ const JobCalendar = (props: Props) => {
         });
         console.log(res);
         console.log(res.data);
-        setWorkEntries(preProcessEntries(res.data.entries));
+        setExtendedEntries(
+          objectMap(
+            preProcessEntries(res.data.entries),
+            (value: JobTimeEntry) => {
+              return { ...value, dayjsObject: dayjs(value.worked) };
+            }
+          )
+        );
         setLoading(false);
       } catch (error) {
         console.log(error);
@@ -49,14 +66,12 @@ const JobCalendar = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.jobID]);
 
-  
-
   const dateToString = (date: any) => {
     return date.month + 1 + "/" + date.day + "/" + date.year;
   };
 
   const dateTemplate = (date: any) => {
-    if (dateToString(date) in workEntries) {
+    if (dateToString(date) in extendedEntries) {
       return (
         <span style={{ color: "var(--pink-700)", fontWeight: "bold" }}>
           {date.day}
@@ -74,9 +89,12 @@ const JobCalendar = (props: Props) => {
         date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
       console.log(str);
       setDate(x);
+      setEdit(false);
       setChoosenDate(x);
     }
   };
+
+  const today = new Date();
 
   if (loading) {
     return <ProgressSpinner />;
@@ -84,10 +102,10 @@ const JobCalendar = (props: Props) => {
 
   return (
     <>
-      <div>JobCalendar for jobID={props.jobID}</div>
       <div className="grid mt-3">
         <div className="col-12 md:col-6">
           <Calendar
+            maxDate={today}
             value={date}
             onChange={(e) => handleClick(e.value)}
             inline
@@ -97,7 +115,15 @@ const JobCalendar = (props: Props) => {
         </div>
         {choosenDate && (
           <div className="col-12 md:col-6">
-            <EntryCard date={choosenDate} entries={workEntries} />
+            <EntryCard
+              job_id={props.jobID}
+              date={choosenDate}
+              extendedEntries={extendedEntries}
+              setExtendedEntries={setExtendedEntries}
+              toast={props.toast}
+              isEditing={edit}
+              setIsEditing={setEdit}
+            />
           </div>
         )}
       </div>
