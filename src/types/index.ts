@@ -17,3 +17,5 @@ export type UserAuth = {
   export interface JobHash {
     [key: string]: JobTimeEntry;
   }
+
+  

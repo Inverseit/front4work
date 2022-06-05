@@ -12,6 +12,7 @@ interface IAuthContextInterface {
   setAuthStatus: (userAuth: UserAuth) => void;
   setUnauthStatus: () => void;
 }
+
 export const authContext = React.createContext<IAuthContextInterface>({
   auth: DEFAULT_USER_AUTH,
   setAuthStatus: () => {},
