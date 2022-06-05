@@ -3,27 +3,15 @@ import { Calendar } from "primereact/calendar";
 import client from "../utils/axios";
 import { authContext } from "../contexts/AuthContext";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { DomHandler } from "primereact/utils";
+import EntryCard from "./EntryCard";
+import { JobTimeEntry, JobHash} from "../types"
 
 type Props = { jobID: string };
 
-type JobTimeEntry = {
-  tid: string;
-  jid: string;
-  uid: string;
-  hours: string;
-  worked: string;
-  entered: string;
-  notes: string;
-};
-
-interface JobHash {
-  [key: string]: JobTimeEntry;
-}
 
 const JobCalendar = (props: Props) => {
   const [date, setDate] = useState<Date | Date[] | undefined>(undefined);
-  const [choosenDate, setChoosenDate] = useState<string>("");
+  const [choosenDate, setChoosenDate] = useState<Date | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [workEntries, setWorkEntries] = useState<JobHash>({});
   const { auth } = React.useContext(authContext);
@@ -61,6 +49,8 @@ const JobCalendar = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.jobID]);
 
+  
+
   const dateToString = (date: any) => {
     return date.month + 1 + "/" + date.day + "/" + date.year;
   };
@@ -84,7 +74,7 @@ const JobCalendar = (props: Props) => {
         date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
       console.log(str);
       setDate(x);
-      setChoosenDate(str);
+      setChoosenDate(x);
     }
   };
 
@@ -95,15 +85,22 @@ const JobCalendar = (props: Props) => {
   return (
     <>
       <div>JobCalendar for jobID={props.jobID}</div>
-      <Calendar
-        className="mt-3"
-        value={date}
-        onChange={(e) => handleClick(e.value)}
-        inline
-        disabledDays={[5, 6]}
-        dateTemplate={dateTemplate}
-      />
-      {choosenDate && <p>{choosenDate}</p>}
+      <div className="grid mt-3">
+        <div className="col-12 md:col-6">
+          <Calendar
+            value={date}
+            onChange={(e) => handleClick(e.value)}
+            inline
+            disabledDays={[5]}
+            dateTemplate={dateTemplate}
+          />
+        </div>
+        {choosenDate && (
+          <div className="col-12 md:col-6">
+            <EntryCard date={choosenDate} entries={workEntries} />
+          </div>
+        )}
+      </div>
     </>
   );
 };

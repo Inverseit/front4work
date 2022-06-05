@@ -61,7 +61,7 @@ const TimeEntry = () => {
           <Button
             key={job.jobID}
             onClick={() => setActiveJobID(job.jobID)}
-            className="p-button-text mr-2"
+            className={activeJobID !== job.jobID ? "p-button-text mr-2" : ""}
             label={job.title}
           />
         ))}

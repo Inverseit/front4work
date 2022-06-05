@@ -8,3 +8,7 @@ export const getStoredUserAuth = (): UserAuth => {
   }
   return DEFAULT_USER_AUTH;
 };
+
+export const dateToStr = (date: Date):String => {
+  return date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
+}

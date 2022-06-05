@@ -11,7 +11,7 @@ const cache = setupCache({
 
 const config: AxiosRequestConfig = {
   // baseURL: process.env.API_SERVER_URL,
-  baseURL: "http://localhost:3006/",
+  baseURL: "http://localhost:3011/",
   adapter: cache.adapter
 };
 
